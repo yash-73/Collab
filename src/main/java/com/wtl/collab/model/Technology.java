@@ -1,0 +1,35 @@
+package com.wtl.collab.model;
+
+public enum Technology {
+    HTML,
+    CSS,
+    C,
+    CPP,
+    JAVA,
+    JAVASCRIPT,
+    GO,
+    RUBY,
+    RUBY_ON_RAILS,
+    PHP,
+    ANGULAR,
+    REACT_JS,
+    NEXT_JS,
+    EXPRESS_JS,
+    NODE_JS,
+    SPRING,
+    SPRING_BOOT,
+    PYTHON,
+    DJANGO,
+    STREAM_LIT,
+    MYSQL,
+    POSTGRESQL,
+    MONGODB,
+    AWS,
+    AZURE,
+    GOOGLE_CLOUD,
+    DOCKER,
+    KAFKA,
+    KUBERNETES,
+    REDIS
+
+}
