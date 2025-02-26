@@ -2,11 +2,17 @@ package com.wtl.collab.controller;
 
 
 import com.wtl.collab.model.User;
+import com.wtl.collab.payload.LoginRequesetDTO;
+import com.wtl.collab.payload.SignupRequestDTO;
+import com.wtl.collab.payload.SignupResponse;
 import com.wtl.collab.repository.UserRepository;
 import com.wtl.collab.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.*;
@@ -27,14 +33,34 @@ public class UserController {
     private BCryptPasswordEncoder encoder;
 
     @PostMapping("/create")
-    public User createUser(@RequestBody User user){
-        user.setPassword(encoder.encode(user.getPassword()));
-        return userService.register(user);
+    public ResponseEntity<SignupResponse> createUser(@RequestBody SignupRequestDTO userDTO){
+        SignupResponse response = userService.register(userDTO);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody User user){
-        return userService.verify(user);
+    public ResponseEntity<String> login(@RequestBody LoginRequesetDTO user){
+        String token =  userService.verify(user);
+        ResponseCookie cookie = ResponseCookie.from("jwtCookie", token)
+                .path("/")
+                .maxAge(60 * 60 *  24 * 7)
+                .httpOnly(true)
+                .build();
+
+        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString()).body(token);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout() {
+        ResponseCookie cookie = ResponseCookie.from("jwtCookie", "")
+                .path("/")
+                .maxAge(0)  // Expire the cookie immediately
+                .httpOnly(true)
+                .build();
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                .body("Logged out successfully");
     }
 
     @GetMapping("/getusers")

@@ -1,12 +1,14 @@
 package com.wtl.collab.service;
 
 import com.wtl.collab.model.User;
-import org.springframework.stereotype.Service;
+import com.wtl.collab.payload.LoginRequesetDTO;
+import com.wtl.collab.payload.SignupRequestDTO;
+import com.wtl.collab.payload.SignupResponse;
 
 
 public interface UserService {
 
-    User register(User user);
+    SignupResponse register(SignupRequestDTO userDTO);
 
-    String verify(User user);
+    String verify(LoginRequesetDTO user);
 }
