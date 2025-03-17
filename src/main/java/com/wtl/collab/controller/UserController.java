@@ -2,7 +2,7 @@ package com.wtl.collab.controller;
 
 
 import com.wtl.collab.model.User;
-import com.wtl.collab.payload.LoginRequesetDTO;
+import com.wtl.collab.payload.LoginRequestDTO;
 import com.wtl.collab.payload.SignupRequestDTO;
 import com.wtl.collab.payload.SignupResponse;
 import com.wtl.collab.repository.UserRepository;
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/user")
 public class UserController {
 
     @Autowired
@@ -32,14 +32,14 @@ public class UserController {
     @Autowired
     private BCryptPasswordEncoder encoder;
 
-    @PostMapping("/create")
+    @PostMapping("/register")
     public ResponseEntity<SignupResponse> createUser(@RequestBody SignupRequestDTO userDTO){
         SignupResponse response = userService.register(userDTO);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginRequesetDTO user){
+    public ResponseEntity<String> login(@RequestBody LoginRequestDTO user){
         String token =  userService.verify(user);
         ResponseCookie cookie = ResponseCookie.from("jwtCookie", token)
                 .path("/")
@@ -68,12 +68,12 @@ public class UserController {
         return userRepository.findAll();
     }
 
-    @DeleteMapping("/removeUser/{id}")
-    public User deleteUser(@PathVariable Long id){
-        User deleted = userRepository.findById(id).orElseThrow(()-> new RuntimeException("User not found"))     ;
-        userRepository.deleteById(id);
-        return deleted;
-    }
+//    @DeleteMapping("/removeUser/{id}")
+//    public User deleteUser(@PathVariable Long id){
+//        User deleted = userRepository.findById(id).orElseThrow(()-> new RuntimeException("User not found"))     ;
+//        userRepository.deleteById(id);
+//        return deleted;
+//    }
 
     @GetMapping("/token")
     public CsrfToken getToken(HttpServletRequest request){

@@ -1,35 +1,69 @@
 package com.wtl.collab.model;
 
 public enum Technology {
-    HTML,
-    CSS,
     C,
     CPP,
     JAVA,
     JAVASCRIPT,
+    PYTHON,
     GO,
     RUBY,
-    RUBY_ON_RAILS,
     PHP,
-    ANGULAR,
+    TYPESCRIPT,
+    SWIFT,
+    KOTLIN,
+    RUST,
+
+    HTML,
+    CSS,
     REACT_JS,
     NEXT_JS,
-    EXPRESS_JS,
+    ANGULAR,
+    VUE_JS,
+    SVELTE,
+
     NODE_JS,
+    EXPRESS_JS,
     SPRING,
     SPRING_BOOT,
-    PYTHON,
     DJANGO,
-    STREAM_LIT,
+    FLASK,
+    RUBY_ON_RAILS,
+    FASTAPI,
+
     MYSQL,
     POSTGRESQL,
     MONGODB,
+    SQLITE,
+    REDIS,
+    FIREBASE,
+
     AWS,
     AZURE,
     GOOGLE_CLOUD,
     DOCKER,
-    KAFKA,
     KUBERNETES,
-    REDIS
+    KAFKA,
+    TERRAFORM,
+    ANSIBLE,
 
+    GIT,
+    GITHUB_ACTIONS,
+    JENKINS,
+    GITLAB_CI,
+
+    RABBITMQ,
+    APACHE_KAFKA,
+    WEBSOCKETS,
+    GRAPHQL,
+
+    OAUTH,
+    JWT,
+    AWS_COGNITO,
+    FIREBASE_AUTH,
+
+    ELASTICSEARCH,
+    PROMETHEUS,
+    GRAFANA,
+    OPENAI_API
 }

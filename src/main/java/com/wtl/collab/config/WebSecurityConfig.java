@@ -1,6 +1,10 @@
 package com.wtl.collab.config;
 
 
+import com.wtl.collab.model.AppRole;
+import com.wtl.collab.model.Role;
+import com.wtl.collab.repository.RoleRepository;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,6 +19,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -24,22 +31,35 @@ public class WebSecurityConfig{
 
     private UserDetailsService userDetailsService;
 
+    private RoleRepository roleRepository;
+
     public WebSecurityConfig(JwtFilter jwtFilter,
-                             UserDetailsService userDetailsService
+                             UserDetailsService userDetailsService,
+                             RoleRepository roleRepository
                              ){
         this.jwtFilter = jwtFilter;
         this.userDetailsService = userDetailsService;
+        this.roleRepository = roleRepository;
     }
 
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
-                    return http.csrf(customizer -> customizer.disable())
+                    return http
+                            .cors(cors -> cors.configurationSource(request -> {
+                                CorsConfiguration config = new CorsConfiguration();
+                                config.setAllowedOrigins(List.of("http://localhost:5173"));
+                                config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
+                                config.setAllowCredentials(true);
+                                config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+                                return config;
+                            }))
 
+                            .csrf(customizer -> customizer.disable())
                             .formLogin(Customizer.withDefaults())
                             .httpBasic(Customizer.withDefaults())
                             .authorizeHttpRequests(request -> request
-                                    .requestMatchers("/register" , "/user/login", "/user/create" )
+                                    .requestMatchers("/api/user/register" , "/api/user/login", "/api/user/create" )
                                     .permitAll()
                                     .anyRequest()
                                     .authenticated())
@@ -70,6 +90,24 @@ public class WebSecurityConfig{
         return configuration.getAuthenticationManager();
     }
 
+
+    @Bean
+    public CommandLineRunner initData(RoleRepository roleRepository){
+        return  args -> {
+            Role userRole = roleRepository.findByRoleName(AppRole.USER)
+                    .orElseGet(()->{
+                        Role newUserRole = new Role(AppRole.USER);
+                        return roleRepository.save(newUserRole);
+                    });
+
+            Role adminRole = roleRepository.findByRoleName(AppRole.ADMIN)
+                    .orElseGet(()->{
+                        Role newAdminRole = new Role(AppRole.ADMIN);
+                        return roleRepository.save(newAdminRole);
+                    });
+
+        };
+    }
 
 
 }

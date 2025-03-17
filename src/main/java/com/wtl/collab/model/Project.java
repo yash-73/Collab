@@ -29,7 +29,7 @@ public class Project {
     @Column(name = "project_name", nullable = false, length = 255)
     private String projectName;
 
-    @Column(name = "description" , nullable = false)
+    @Column(name = "description")
     private String description;
 
     @Column(name = "created_at", updatable = false)
@@ -59,6 +59,7 @@ public class Project {
     private Set<User> members;
 
 
+    @Enumerated(EnumType.STRING)
     @ManyToMany(
             cascade = {CascadeType.MERGE, CascadeType.PERSIST},
             fetch = FetchType.EAGER
