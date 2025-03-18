@@ -13,7 +13,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProjectDTO {
-
+    private Long projectId;
     private String projectName;
     private String description;
     private Set<String> techStack = new HashSet<>();
@@ -22,10 +22,18 @@ public class ProjectDTO {
     @Override
     public String toString() {
         return "ProjectDTO{" +
-                "projectName='" + projectName + '\'' +
+                "projectId='" + projectId + '\''+
+                ", cprojectName='" + projectName + '\'' +
                 ", description='" + description + '\'' +
                 ", techStack=" + techStack +
                 ", githubRepository='" + githubRepository + '\'' +
                 '}';
+    }
+
+    public ProjectDTO(String projectName, String description, Set<String> techStack, String githubRepository){
+        this.projectName = projectName;
+        this.githubRepository = githubRepository;
+        this.description = description;
+        this.techStack = techStack;
     }
 }

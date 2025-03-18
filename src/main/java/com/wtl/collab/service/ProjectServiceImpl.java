@@ -28,16 +28,14 @@ public class ProjectServiceImpl implements  ProjectService{
 
     private TechRepository techRepository;
 
-    private UserRepository userRepository;
 
 
     public ProjectServiceImpl(ProjectRepository projectRepository, AuthUtil authUtil,
-                              ModelMapper modelMapper, TechRepository techRepository,
-                              UserRepository userRepository){
+                              ModelMapper modelMapper, TechRepository techRepository){
         this.projectRepository = projectRepository;
         this.modelMapper = modelMapper;
         this.techRepository = techRepository;
-        this.userRepository = userRepository;
+
 
     }
 
