@@ -16,4 +16,5 @@ public class SignupRequestDTO {
     private String email;
     private String password;
     private Set<AppRole> roles = new HashSet<>();
+    private Set<String> techStack = new HashSet<>();
 }

@@ -2,8 +2,6 @@ package com.wtl.collab.payload;
 
 
 import com.wtl.collab.model.Tech;
-import com.wtl.collab.model.Technology;
-import com.wtl.collab.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,7 +16,7 @@ public class ProjectDTO {
 
     private String projectName;
     private String description;
-    private Set<Technology> techStack = new HashSet<>();
+    private Set<String> techStack = new HashSet<>();
     private String githubRepository;
 
     @Override

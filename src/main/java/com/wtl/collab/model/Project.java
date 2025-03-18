@@ -3,6 +3,7 @@ package com.wtl.collab.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -43,11 +44,9 @@ public class Project {
     private ProjectStatus projectStatus;
 
 
-    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "creator_id" , nullable = false)
     private User creator;
-
 
     @JsonIgnore
     @ManyToMany
@@ -59,7 +58,6 @@ public class Project {
     private Set<User> members;
 
 
-    @Enumerated(EnumType.STRING)
     @ManyToMany(
             cascade = {CascadeType.MERGE, CascadeType.PERSIST},
             fetch = FetchType.EAGER

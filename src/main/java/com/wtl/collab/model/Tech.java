@@ -19,13 +19,13 @@ public class Tech {
     private Integer id;
 
 //  @ToString.Exclude
-    @Enumerated(EnumType.STRING)
+//  @Enumerated(EnumType.STRING)
     @Column(name = "tech_name")
-    private Technology technology;
+    private String techName;
 
 
-    public Tech(Technology technology){
-        this.technology = technology;
+    public Tech(String techName){
+        this.techName = techName;
     }
 
 

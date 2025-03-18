@@ -2,22 +2,23 @@ package com.wtl.collab.model;
 
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
-@Entity
+@NoArgsConstructor
 @AllArgsConstructor
-@NoArgsConstructor(force = true)
-@Data
+@Getter
+@Setter
+@Entity
 @Table(name = "users")
 public class User {
 
@@ -35,6 +36,7 @@ public class User {
     @Column(name = "email" , unique = true, nullable = false)
     private String email;
 
+    @JsonIgnore
     @NotBlank
     @Column(name = "password" , nullable = false)
     private String password;
@@ -47,7 +49,7 @@ public class User {
     private Set<Tech> techStack = new HashSet<>();
 
 
-    @JsonManagedReference
+    @JsonIgnore
     @OneToMany(mappedBy = "creator" , cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     private Set<Project> createdProjects = new HashSet<>();
 
@@ -70,5 +72,28 @@ public class User {
         this.email = email;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", techStack=" + techStack +
+                ", roles=" + roles +
+                '}';
+    }
 }

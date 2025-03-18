@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TechRepository extends JpaRepository<Tech, Integer> {
+
+    Tech findByTechName(String technology);
 }
