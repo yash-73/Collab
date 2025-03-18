@@ -9,4 +9,7 @@ public interface ProjectService {
 
     @Transactional
     ProjectDTO createNewProject(ProjectDTO projectDTO, User user);
+
+
+    ProjectDTO updateProject(ProjectDTO projectDTO,Long projectId, User user);
 }

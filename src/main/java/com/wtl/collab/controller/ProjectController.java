@@ -54,4 +54,12 @@ public class ProjectController {
                 return ResponseEntity.ok(myCreatedProjects);
         }
 
+        @PreAuthorize("hasAuthority('USER')")
+        @PutMapping("/{projectId}")
+        public ResponseEntity<ProjectDTO> updateMyProject(@RequestBody ProjectDTO projectDTO, @PathVariable Long projectId){
+                User user = authUtil.loggedInUser();
+                ProjectDTO updatedProject = projectService.updateProject(projectDTO, projectId, user);
+                return new ResponseEntity<>(updatedProject, HttpStatus.ACCEPTED);
+        }
+
 }
