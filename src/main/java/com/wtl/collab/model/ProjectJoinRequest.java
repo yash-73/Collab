@@ -16,7 +16,7 @@ public class ProjectJoinRequest {
 
     private Long projectId;
     private String status;
-    private Long userID;
+    private Long userId;
     private Date timeStamp;
 
     public ProjectJoinRequest(Long projectId){

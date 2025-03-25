@@ -7,10 +7,7 @@ import com.wtl.collab.service.NotificationService;
 import com.wtl.collab.util.AuthUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.concurrent.ExecutionException;
 
@@ -32,6 +29,14 @@ public class NotificationController {
     public ResponseEntity<String> addJoinRequest(@RequestBody ProjectJoinRequest request) {
         User user = authUtil.loggedInUser();
         String response = notificationService.addRequest(request, user);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+
+    @PutMapping("/accept-request")
+    public ResponseEntity<String> acceptRequest(@RequestBody ProjectJoinRequest request){
+        User creator = authUtil.loggedInUser();
+        String response = notificationService.acceptRequest(request, creator);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
