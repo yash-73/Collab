@@ -55,11 +55,19 @@ public class ProjectController {
         }
 
         @PreAuthorize("hasAuthority('USER')")
-        @PutMapping("/{projectId}")
-        public ResponseEntity<ProjectDTO> updateMyProject(@RequestBody ProjectDTO projectDTO, @PathVariable Long projectId){
+        @PutMapping("/update")
+        public ResponseEntity<ProjectDTO> updateMyProject(@RequestBody ProjectDTO projectDTO){
                 User user = authUtil.loggedInUser();
-                ProjectDTO updatedProject = projectService.updateProject(projectDTO, projectId, user);
+                ProjectDTO updatedProject = projectService.updateProject(projectDTO, user);
                 return new ResponseEntity<>(updatedProject, HttpStatus.ACCEPTED);
+        }
+
+        @PreAuthorize("hasAuthority('USER')")
+        @DeleteMapping("/delete/{projectId}")
+        public ResponseEntity<String> deleteProject(@PathVariable Long projectId){
+                User user = authUtil.loggedInUser();
+                String result = projectService.deleteProject(projectId, user);
+                return new ResponseEntity<>(result, HttpStatus.OK);
         }
 
 }

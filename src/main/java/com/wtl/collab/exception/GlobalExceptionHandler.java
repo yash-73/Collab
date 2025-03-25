@@ -16,6 +16,20 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(apiResponse, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(ExpiredJwt.class)
+    public ResponseEntity<APIResponse> myExpiredJwtException(ExpiredJwt e){
+        String message = e.getMessage();
+        APIResponse apiResponse = new APIResponse(message, false);
+        return new ResponseEntity<>(apiResponse, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(GeneralException.class)
+    public ResponseEntity<APIResponse> myGeneralException(GeneralException e){
+        String message = e.getMessage();
+        APIResponse apiResponse = new APIResponse(message, false);
+        return new ResponseEntity<>(apiResponse, HttpStatus.GONE);
+    }
+
 
 
 }

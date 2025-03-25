@@ -9,6 +9,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 public class AuthUtil {
 
@@ -34,5 +36,11 @@ public class AuthUtil {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return userRepository.findByUsername(authentication.getName())
                 .orElseThrow(()-> new UsernameNotFoundException("User with username: "+authentication.getName()+ " not found"));
+    }
+
+    public boolean isLoggedIn(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            Optional<User> user = userRepository.findByUsername(authentication.getName());
+            return user.isPresent();
     }
 }

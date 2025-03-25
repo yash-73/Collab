@@ -10,7 +10,7 @@ import java.io.IOException;
 @SpringBootApplication
 public class CollabApplication {
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) {
 		SpringApplication.run(CollabApplication.class, args);
 	}
 

@@ -1,9 +1,7 @@
 package com.wtl.collab.model;
 
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -39,7 +37,7 @@ public class Project {
     @Column(name = "github_repository", nullable = false)
     private String githubRepository;
 
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.ORDINAL)
     @Column(name = "project_status" , nullable = false)
     private ProjectStatus projectStatus;
 

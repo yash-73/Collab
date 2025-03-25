@@ -1,8 +1,9 @@
 package com.wtl.collab.service;
 
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
+import com.wtl.collab.exception.ExpiredJwt;
+import com.wtl.collab.exception.ResourceNotFound;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -48,7 +49,7 @@ public class JwtService {
                 .add(claims)
                 .subject(username)
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration((new Date(System.currentTimeMillis() + 1000 * 60 * 30)))
+                .expiration((new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 15 )))
                 .and()
                 .signWith(key())
                 .compact();
@@ -61,34 +62,36 @@ public class JwtService {
 //        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
 //    }
 
-    public String getUsernameFromToken(String token) {
+    public String getUsernameFromToken(String token) throws Exception{
         return extractClaims(token, Claims::getSubject);
     }
 
-    public boolean validateToken(String token, UserDetails userDetails) {
+    public boolean validateToken(String token, UserDetails userDetails) throws Exception{
         final String userName = getUsernameFromToken(token);
-        return (userName.equals(userDetails.getUsername()) && !isTokenExpired(token));
+
+        if(isTokenExpired(token)) throw new ExpiredJwt("JWT has expired, login again");
+        return (userName.equals(userDetails.getUsername()));
 
     }
 
-    private <T> T extractClaims(String token, Function<Claims, T> claimResolver) {
+    private <T> T extractClaims(String token, Function<Claims, T> claimResolver) throws Exception {
         final Claims claims = extractAllClaims(token);
         return claimResolver.apply(claims);
     }
 
-    private Claims extractAllClaims(String token) {
-        return Jwts.parser()
-                .verifyWith((SecretKey) key())
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
+    private Claims extractAllClaims(String token) throws Exception{
+            return Jwts.parser()
+                    .verifyWith((SecretKey) key())
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
     }
 
-    private boolean isTokenExpired(String token) {
+    private boolean isTokenExpired(String token) throws Exception{
         return extractExpiration(token).before(new Date());
     }
 
-    private Date extractExpiration(String token) {
+    private Date extractExpiration(String token) throws Exception {
         return extractClaims(token, Claims::getExpiration);
     }
 }

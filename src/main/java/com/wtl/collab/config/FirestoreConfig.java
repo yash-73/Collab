@@ -5,26 +5,22 @@ import com.google.cloud.firestore.Firestore;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.cloud.FirestoreClient;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @Configuration
 public class FirestoreConfig {
 
-//    @Value("${firebase.credentials.path}") // Use application.properties or environment variable
-    private String credentialsPath = "src/main/resources/serviceAccountKey.json";
+    private static final String CREDENTIALS_PATH = "src/main/resources/serviceAccountKey.json";
 
     @Bean
     public FirebaseApp firebaseApp() throws IOException {
         if (FirebaseApp.getApps().isEmpty()) { // Prevent duplicate initialization
-            Path filePath = Paths.get(credentialsPath);
-            FileInputStream serviceAccount = new FileInputStream(filePath.toFile());
+            FileInputStream serviceAccount = new FileInputStream(Paths.get(CREDENTIALS_PATH).toFile());
 
             FirebaseOptions options = FirebaseOptions.builder()
                     .setCredentials(GoogleCredentials.fromStream(serviceAccount))
@@ -36,7 +32,7 @@ public class FirestoreConfig {
     }
 
     @Bean
-    public Firestore firestore() {
+    public Firestore firestore(FirebaseApp firebaseApp) { // Ensure FirebaseApp is initialized first
         return FirestoreClient.getFirestore();
     }
 }

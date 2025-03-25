@@ -10,6 +10,7 @@ import com.wtl.collab.payload.SignupResponse;
 import com.wtl.collab.repository.UserRepository;
 import com.wtl.collab.service.UserService;
 import com.wtl.collab.util.AuthUtil;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpHeaders;
@@ -55,8 +56,10 @@ public class UserController {
         String token =  userService.verify(user);
         ResponseCookie cookie = ResponseCookie.from("jwtCookie", token)
                 .path("/")
-                .maxAge(60 * 60 *  24 * 7)
+                .maxAge(60 * 60 * 24 * 15   )
                 .httpOnly(true)
+                .secure(true)
+                .sameSite("None")
                 .build();
 
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString()).body(token);
@@ -68,6 +71,8 @@ public class UserController {
                 .path("/")
                 .maxAge(0)  // Expire the cookie immediately
                 .httpOnly(true)
+                .secure(true)
+                .sameSite("None")
                 .build();
 
         return ResponseEntity.ok()
@@ -119,7 +124,17 @@ public class UserController {
     }
 
 
-
-
-
+    @GetMapping("/is-logged-in")
+    public ResponseEntity<Boolean> isLoggedIn(HttpServletRequest request) {
+        boolean cookiePresent = false;
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if (cookie.getName().equals("jwtCookie")) {
+                    cookiePresent = true;
+                    break;
+                }
+            }
+        }
+        return new ResponseEntity<Boolean>(cookiePresent, HttpStatus.OK);
+    }
 }

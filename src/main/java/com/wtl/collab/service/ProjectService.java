@@ -11,5 +11,7 @@ public interface ProjectService {
     ProjectDTO createNewProject(ProjectDTO projectDTO, User user);
 
 
-    ProjectDTO updateProject(ProjectDTO projectDTO,Long projectId, User user);
+    ProjectDTO updateProject(ProjectDTO projectDTO, User user);
+
+    String deleteProject(Long projectId, User user);
 }

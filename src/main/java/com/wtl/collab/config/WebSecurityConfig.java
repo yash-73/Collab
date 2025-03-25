@@ -1,6 +1,7 @@
 package com.wtl.collab.config;
 
 
+import com.google.api.Http;
 import com.wtl.collab.model.AppRole;
 import com.wtl.collab.model.Role;
 import com.wtl.collab.repository.RoleRepository;
@@ -46,20 +47,22 @@ public class WebSecurityConfig{
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
                     return http
-                            .cors(cors -> cors.configurationSource(request -> {
-                                CorsConfiguration config = new CorsConfiguration();
-                                config.setAllowedOrigins(List.of("http://localhost:5173"));
-                                config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
-                                config.setAllowCredentials(true);
-                                config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
-                                return config;
-                            }))
-
+//                            .cors(cors -> cors.configurationSource(request -> {
+//                                CorsConfiguration config = new CorsConfiguration();
+//                                config.setAllowedOrigins(List.of("http://localhost:5173"));
+//                                config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
+//                                config.setAllowCredentials(true);
+//                                config.setAllowedHeaders(List.of("Authorization", "Content-Type", "Set-Cookie"));
+//                                return config;
+//                            }))
+                            .cors(Customizer.withDefaults())
                             .csrf(customizer -> customizer.disable())
                             .formLogin(Customizer.withDefaults())
                             .httpBasic(Customizer.withDefaults())
+                            .oauth2Client(Customizer.withDefaults())
                             .authorizeHttpRequests(request -> request
-                                    .requestMatchers("/api/user/register" , "/api/user/login", "/api/user/create" )
+                                    .requestMatchers("/api/user/register" , "/api/user/login",
+                                            "/api/user/create", "/api/user/is-logged-in" )
                                     .permitAll()
                                     .anyRequest()
                                     .authenticated())
@@ -67,6 +70,9 @@ public class WebSecurityConfig{
                             .addFilterBefore(jwtFilter , UsernamePasswordAuthenticationFilter.class)
                             .build();
     }
+
+
+
 
 
 

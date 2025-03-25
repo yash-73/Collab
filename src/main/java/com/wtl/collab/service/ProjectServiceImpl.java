@@ -46,7 +46,7 @@ public class ProjectServiceImpl implements  ProjectService{
 
         Project project  = new Project();
         project.setProjectName(projectDTO.getProjectName()); //projectName
-        project.setCreator(user);//creator
+        project.setCreator(user); //creator
         project.setProjectStatus(ProjectStatus.OPEN); //projectStatus
         project.setDescription(projectDTO.getDescription()); //description
         project.setGithubRepository(projectDTO.getGithubRepository()); //githubRepository
@@ -72,14 +72,15 @@ public class ProjectServiceImpl implements  ProjectService{
 
         ProjectDTO savedProjectDTO = modelMapper.map(savedProject, ProjectDTO.class);
         savedProjectDTO.setTechStack(projectDTO.getTechStack());
+
         return savedProjectDTO;
 
     }
 
     @Override
-    public ProjectDTO updateProject(ProjectDTO projectDTO, Long projectId, User user) {
-        Project project = projectRepository.findById(projectId)
-                .orElseThrow(()-> new ResourceNotFound("Project not found with projectId "+ projectId));
+    public ProjectDTO updateProject(ProjectDTO projectDTO, User user) {
+        Project project = projectRepository.findById(projectDTO.getProjectId())
+                .orElseThrow(()-> new ResourceNotFound("Project not found with projectId "+ projectDTO.getProjectId()));
 
         if(project.getCreator().getId().equals(user.getId())){
             project.setProjectName(projectDTO.getProjectName()); //projectName
@@ -101,8 +102,26 @@ public class ProjectServiceImpl implements  ProjectService{
 
         else {
             throw new RuntimeException("User with userId "+ user.getId() +
-                    " is not the creator of the project with projectId "+ projectId);
+                    " is not the creator of the project with projectId "+ projectDTO.getProjectId());
         }
+    }
+
+    @Override
+    @Transactional
+    public String deleteProject(Long projectId, User user) {
+
+        Project project = projectRepository.findById(projectId)
+                        .orElseThrow(()-> new ResourceNotFound("Project not found with projectId: "+projectId));
+
+        if(project.getCreator().getId().equals(user.getId())){
+
+            projectRepository.delete(project);
+            user.getProjects().remove(project);
+            user.getCreatedProjects().remove(project);
+            return "Project deleted";
+        }
+
+        else return "You are not the creator of the project";
     }
 
 

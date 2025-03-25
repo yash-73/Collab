@@ -23,7 +23,7 @@ public class ProjectDTO {
     public String toString() {
         return "ProjectDTO{" +
                 "projectId='" + projectId + '\''+
-                ", cprojectName='" + projectName + '\'' +
+                ", projectName='" + projectName + '\'' +
                 ", description='" + description + '\'' +
                 ", techStack=" + techStack +
                 ", githubRepository='" + githubRepository + '\'' +
